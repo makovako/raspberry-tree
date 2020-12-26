@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+		body {
+			display: flex;
+			justify-content: start;
+			align-items: start;
+		}
+		button {
+			outline: none;
+			border: none;
+		}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+</head>
+<body>
+	<!-- ON/OFF  -->
+	<div></div>
+	<!-- COLORS  -->
+	<div id="colors-div">
+		<h1>Colors:</h1>
+	</div>
+	<!-- BRIGHTNESS  -->
+	<div></div>
+	<!-- EFFECTS  -->
+	<div></div>
+	<script>
+		const socket = io()
+
+		// Generate colors buttons
+		const colors_div = document.getElementById('colors-div');
+		["red", "green", "blue", "yellow", "purple", "lime", "cyan", "orange", "magenta", "black"].map(color => {
+			let btn = document.createElement('button')
+			btn.id = color
+			btn.style.width = "4rem"
+			btn.style.height = "4rem"
+			btn.style.background = color
+			btn.style.outline = "none"
+			btn.classList.add("btn")
+			colors_div.appendChild(btn)
+		})
+
+		let color_btns = [...document.getElementsByClassName('btn')]
+		color_btns.map(btn => {
+			btn.addEventListener('click', e => {
+				e.preventDefault()
+				let out = {color: btn.id}
+				socket.emit("tree", out)
+			})
+		})
+
+	</script>
+</body>
+</html>

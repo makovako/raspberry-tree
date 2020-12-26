@@ -1,0 +1,12 @@
+bidict==0.21.2
+colorzero==1.1
+dnspython==1.16.0
+eventlet==0.30.0
+gpiozero==1.5.1
+greenlet==0.4.17
+pigpio==1.78
+pkg-resources==0.0.0
+python-engineio==4.0.0
+python-socketio==5.0.4
+RPi.GPIO==0.7.0
+six==1.15.0

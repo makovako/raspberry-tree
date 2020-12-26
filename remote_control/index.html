@@ -9,11 +9,21 @@
 			padding: 0;
 			margin: 0;
 			box-sizing: border-box;
+			font-family: Arial, Helvetica, sans-serif;
 		}
 		body {
+			padding: 1rem;
 			display: flex;
+			flex-direction: column;
 			justify-content: start;
 			align-items: start;
+		}
+		body > div {
+			margin: 1rem 0;
+		}
+		#plus, #minus, #on, #off {
+			width: 4rem;
+			height: 4rem;
 		}
 		button {
 			outline: none;
@@ -24,21 +34,61 @@
 </head>
 <body>
 	<!-- ON/OFF  -->
-	<div></div>
+	<div>
+		<h1>ON/OFF</h1>
+		<button id="off">O</button>
+		<button id="on">I</button>
+	</div>
 	<!-- COLORS  -->
 	<div id="colors-div">
-		<h1>Colors:</h1>
+		<h1>Colors</h1>
 	</div>
 	<!-- BRIGHTNESS  -->
-	<div></div>
+	<div>
+		<h1>Brightness</h1>
+		<button id="plus">+</button>
+		<button id="minus">-</button>
+	</div>
 	<!-- EFFECTS  -->
-	<div></div>
+	<div>
+		<h1>Effects</h1>
+		<select id="effect-select">
+			<optgroup label="Turn effects off">
+				<option value="none">None</option>
+			</optgroup>
+			<optgroup label="Pulzing">
+				<option value="pulze-random">Pulze with random colors</option>
+				<option value="pulze-custom">Pulze with custom colors</option>
+			</optgroup>
+			<optgroup label="Fading">
+				<option value="fade-random">Fade with random colors</option>
+				<option value="fade-custom">Fade with custom  colors</option>
+			</optgroup>
+			<optgroup label="Blinking">
+				<option value="blink-random">Blink with random colors</option>
+				<option value="blink-random-black">Blink with random colors through black</option>
+				<option value="blink-custom">Blink with custom colors</option>
+				<option value="blink-custom-black">Blink with custom colors through black</option>
+			</optgroup>
+			<optgroup label="Huecycle">
+				<option value="huecycle">Huecycle</option>
+				<option value="huecycle-fade">Huecycle via fading</option>
+			</optgroup>
+			<optgroup label="Flickering">
+				<option value="flicker-yr">Flicker yellow+red</option>
+				<option value="flicker-gb">Flicker green+blue</option>
+				<option value="flicker-yrgb">Flicker yellow+red and green+blue</option>
+				<option value="flicker-custom">Flicker custom</option>
+			</optgroup>
+		</select>
+	</div>
 	<script>
 		const socket = io()
+		const COLOR_STRINGS = ["red", "orangered", "yellow", "greenyellow", "lime", "green", "powderblue", "cyan", "blue", "purple", "magenta", "deeppink", "black", "white"]
 
 		// Generate colors buttons
 		const colors_div = document.getElementById('colors-div');
-		["red", "green", "blue", "yellow", "purple", "lime", "cyan", "orange", "magenta", "black"].map(color => {
+		COLOR_STRINGS.map(color => {
 			let btn = document.createElement('button')
 			btn.id = color
 			btn.style.width = "4rem"
@@ -46,18 +96,44 @@
 			btn.style.background = color
 			btn.style.outline = "none"
 			btn.classList.add("btn")
+			btn.classList.add("color-btn")
 			colors_div.appendChild(btn)
 		})
 
-		let color_btns = [...document.getElementsByClassName('btn')]
+		let color_btns = [...document.getElementsByClassName('color-btn')]
 		color_btns.map(btn => {
 			btn.addEventListener('click', e => {
 				e.preventDefault()
-				let out = {color: btn.id}
-				socket.emit("tree", out)
+				socket.emit("color", btn.id)
 			})
 		})
 
+		const plus = document.getElementById('plus')
+		const minus = document.getElementById('minus')
+		plus.addEventListener('click', e => {
+			e.preventDefault()
+			socket.emit("plus")
+		})
+		minus.addEventListener('click', e => {
+			e.preventDefault()
+			socket.emit("minus")
+		})
+
+		const on = document.getElementById('on')
+		const off = document.getElementById('off')
+		on.addEventListener('click', e => {
+			e.preventDefault()
+			socket.emit("on")
+		})
+		off.addEventListener('click', e => {
+			e.preventDefault()
+			socket.emit("off")
+		})
+
+		const effect_select = document.getElementById('effect-select')
+		effect_select.addEventListener('change' , e => {
+			socket.emit("effect", e.target.value)
+		})
 	</script>
 </body>
 </html>

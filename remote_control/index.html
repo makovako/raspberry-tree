@@ -49,6 +49,9 @@
 		<button id="plus">+</button>
 		<button id="minus">-</button>
 	</div>
+	<!-- Speed  -->
+	<div>
+	</div>
 	<!-- EFFECTS  -->
 	<div>
 		<h1>Effects</h1>
@@ -61,8 +64,8 @@
 				<option value="pulze-custom">Pulze with custom colors</option>
 			</optgroup>
 			<optgroup label="Fading">
-				<option value="fade-random">Fade with random colors</option>
-				<option value="fade-custom">Fade with custom  colors</option>
+				<option value="fading-random">Fade with random colors</option>
+				<option value="fading-custom">Fade with custom colors</option>
 			</optgroup>
 			<optgroup label="Blinking">
 				<option value="blink-random">Blink with random colors</option>
@@ -73,6 +76,7 @@
 			<optgroup label="Huecycle">
 				<option value="huecycle">Huecycle</option>
 				<option value="huecycle-fade">Huecycle via fading</option>
+				<option value="huecycle-black">Huecycle with black</option>
 			</optgroup>
 			<optgroup label="Flickering">
 				<option value="flicker-yr">Flicker yellow+red</option>
@@ -84,7 +88,7 @@
 	</div>
 	<script>
 		const socket = io()
-		const COLOR_STRINGS = ["red", "orangered", "yellow", "greenyellow", "lime", "green", "powderblue", "cyan", "blue", "purple", "magenta", "deeppink", "black", "white"]
+		const COLOR_STRINGS = ["red", "orangered", "yellow", "greenyellow", "lime", "green", "powderblue", "cyan", "blue", "purple", "magenta", "deeppink", "white", "black"]
 
 		// Generate colors buttons
 		const colors_div = document.getElementById('colors-div');
@@ -132,7 +136,16 @@
 
 		const effect_select = document.getElementById('effect-select')
 		effect_select.addEventListener('change' , e => {
-			socket.emit("effect", e.target.value)
+			effect = e.target.value
+			colors = []
+			if (effect.includes("random")) {
+				colors = COLOR_STRINGS.slice(0, COLOR_STRINGS.length - 1)
+			}
+			out = {
+				type: effect,
+				colors: colors
+			}
+			socket.emit("effect", out)
 		})
 	</script>
 </body>
